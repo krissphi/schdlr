@@ -8,6 +8,11 @@ export type ViewMode =
   | 'routines'
   | 'analytics';
 
+export interface SubCategory {
+  id: string;
+  name: string;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -16,6 +21,7 @@ export interface Category {
   textColor: string;     // High readability text color
   borderColor: string;   // Light matching border
   icon?: string;
+  subCategories?: SubCategory[];
 }
 
 export interface Platform {
@@ -66,6 +72,7 @@ export interface ActivityTask {
   id: string;
   title: string;
   categoryId: string;    // References Category.id (dynamic)
+  subCategoryId?: string; // References SubCategory.id
   date: string;          // YYYY-MM-DD
   startTime?: string;    // HH:mm (e.g. "09:00")
   endTime?: string;      // HH:mm (e.g. "10:30")
@@ -81,6 +88,7 @@ export interface ContentItem {
   title: string;
   platformId: string;    // References Platform.id (dynamic)
   categoryId: string;    // References Category.id
+  subCategoryId?: string; // References SubCategory.id
   stage: ContentStage;
   targetDate: string;    // YYYY-MM-DD
   uploadTime?: string;   // HH:mm (e.g. "16:30" or "20:00")
@@ -97,6 +105,7 @@ export interface Routine {
   id: string;
   title: string;
   categoryId: string;    // References Category.id
+  subCategoryId?: string; // References SubCategory.id
   targetTime: string;    // e.g. "06:30"
   streak: number;
   frequency: 'daily' | 'weekdays' | 'weekends';

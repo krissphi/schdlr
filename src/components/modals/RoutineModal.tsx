@@ -14,20 +14,25 @@ export const RoutineModal: React.FC = () => {
 
   const [title, setTitle] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [subCategoryId, setSubCategoryId] = useState('');
   const [targetTime, setTargetTime] = useState('08:00');
   const [frequency, setFrequency] = useState<'daily' | 'weekdays' | 'weekends'>('daily');
   const [notes, setNotes] = useState('');
+
+  const selectedCategory = categories.find((c) => c.id === categoryId);
 
   useEffect(() => {
     if (editingRoutine) {
       setTitle(editingRoutine.title);
       setCategoryId(editingRoutine.categoryId || categories[0]?.id || '');
+      setSubCategoryId(editingRoutine.subCategoryId || '');
       setTargetTime(editingRoutine.targetTime || '08:00');
       setFrequency(editingRoutine.frequency || 'daily');
       setNotes(editingRoutine.notes || '');
     } else {
       setTitle('');
       setCategoryId(categories[0]?.id || '');
+      setSubCategoryId('');
       setTargetTime('08:00');
       setFrequency('daily');
       setNotes('');
@@ -44,6 +49,7 @@ export const RoutineModal: React.FC = () => {
       updateRoutine(editingRoutine.id, {
         title: title.trim(),
         categoryId: categoryId || categories[0]?.id,
+        subCategoryId: subCategoryId || undefined,
         targetTime,
         frequency,
         notes: notes.trim(),
@@ -52,6 +58,7 @@ export const RoutineModal: React.FC = () => {
       addRoutine({
         title: title.trim(),
         categoryId: categoryId || categories[0]?.id,
+        subCategoryId: subCategoryId || undefined,
         targetTime,
         frequency,
         status: 'pending',
@@ -95,11 +102,14 @@ export const RoutineModal: React.FC = () => {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Category (Dynamic)
+                Category
               </label>
               <select
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
+                onChange={(e) => {
+                  setCategoryId(e.target.value);
+                  setSubCategoryId('');
+                }}
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
               >
                 {categories.map((c) => (
@@ -112,15 +122,34 @@ export const RoutineModal: React.FC = () => {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Target Time
+                Sub-category (Optional)
               </label>
-              <input
-                type="time"
-                value={targetTime}
-                onChange={(e) => setTargetTime(e.target.value)}
-                className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 font-mono"
-              />
+              <select
+                value={subCategoryId}
+                onChange={(e) => setSubCategoryId(e.target.value)}
+                disabled={!selectedCategory?.subCategories || selectedCategory.subCategories.length === 0}
+                className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 disabled:opacity-50"
+              >
+                <option value="">None</option>
+                {selectedCategory?.subCategories?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Target Time
+            </label>
+            <input
+              type="time"
+              value={targetTime}
+              onChange={(e) => setTargetTime(e.target.value)}
+              className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 font-mono"
+            />
           </div>
 
           <div>

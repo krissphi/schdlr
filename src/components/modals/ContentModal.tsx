@@ -23,6 +23,7 @@ export const ContentModal: React.FC = () => {
   const [title, setTitle] = useState('');
   const [platformId, setPlatformId] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [subCategoryId, setSubCategoryId] = useState('');
   const [stage, setStage] = useState<ContentStage>('idea');
   const [targetDate, setTargetDate] = useState(selectedDate);
   const [uploadTime, setUploadTime] = useState('17:00');
@@ -37,11 +38,14 @@ export const ContentModal: React.FC = () => {
   const [attUrl, setAttUrl] = useState('');
   const [attType, setAttType] = useState<ContentAttachment['type']>('link');
 
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+
   useEffect(() => {
     if (editingContent) {
       setTitle(editingContent.title || '');
       setPlatformId(editingContent.platformId || platforms[0]?.id || '');
       setCategoryId(editingContent.categoryId || 'cat-content');
+      setSubCategoryId(editingContent.subCategoryId || '');
       setStage(editingContent.stage || 'idea');
       setTargetDate(editingContent.targetDate || selectedDate);
       setUploadTime(editingContent.uploadTime || '17:00');
@@ -53,6 +57,7 @@ export const ContentModal: React.FC = () => {
       setTitle('');
       setPlatformId(platforms[0]?.id || '');
       setCategoryId('cat-content');
+      setSubCategoryId('');
       setStage('idea');
       setTargetDate(selectedDate);
       setUploadTime('17:00');
@@ -132,6 +137,7 @@ export const ContentModal: React.FC = () => {
         title: title.trim(),
         platformId: platformId || platforms[0]?.id,
         categoryId: categoryId || 'cat-content',
+        subCategoryId: subCategoryId || undefined,
         stage,
         targetDate,
         uploadTime,
@@ -145,6 +151,7 @@ export const ContentModal: React.FC = () => {
         title: title.trim(),
         platformId: platformId || platforms[0]?.id,
         categoryId: categoryId || 'cat-content',
+        subCategoryId: subCategoryId || undefined,
         stage,
         targetDate,
         uploadTime,
@@ -268,22 +275,46 @@ export const ContentModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Category */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Category Bucket
-            </label>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
-            >
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+          {/* Category & Sub-category */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Category Bucket
+              </label>
+              <select
+                value={categoryId}
+                onChange={(e) => {
+                  setCategoryId(e.target.value);
+                  setSubCategoryId('');
+                }}
+                className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+              >
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Sub-category (Optional)
+              </label>
+              <select
+                value={subCategoryId}
+                onChange={(e) => setSubCategoryId(e.target.value)}
+                disabled={!selectedCategory?.subCategories || selectedCategory.subCategories.length === 0}
+                className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 disabled:opacity-50"
+              >
+                <option value="">None</option>
+                {selectedCategory?.subCategories?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Media & Link Attachments */}

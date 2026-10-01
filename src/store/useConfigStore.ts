@@ -26,6 +26,8 @@ interface ConfigState {
   addCategory: (cat: Omit<Category, 'id'>) => Category;
   updateCategory: (id: string, updates: Partial<Category>) => void;
   deleteCategory: (id: string) => void;
+  addSubCategory: (categoryId: string, name: string) => void;
+  deleteSubCategory: (categoryId: string, subId: string) => void;
   getCategoryById: (id: string) => Category | undefined;
 
   platforms: Platform[];
@@ -106,6 +108,29 @@ export const useConfigStore = create<ConfigState>()(
         }));
 
         set({ categories: remaining });
+      },
+      addSubCategory: (categoryId, name) => {
+        const trimmed = name.trim();
+        if (!trimmed) return;
+        const newSub = { id: `sub-${Date.now()}`, name: trimmed };
+        set((state) => ({
+          categories: state.categories.map((c) => {
+            if (c.id !== categoryId) return c;
+            const existing = c.subCategories || [];
+            return { ...c, subCategories: [...existing, newSub] };
+          }),
+        }));
+      },
+      deleteSubCategory: (categoryId, subId) => {
+        set((state) => ({
+          categories: state.categories.map((c) => {
+            if (c.id !== categoryId) return c;
+            return {
+              ...c,
+              subCategories: (c.subCategories || []).filter((s) => s.id !== subId),
+            };
+          }),
+        }));
       },
       getCategoryById: (id) => {
         const list = get().categories;

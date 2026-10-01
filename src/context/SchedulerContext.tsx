@@ -37,6 +37,8 @@ interface SchedulerContextType {
   addCategory: (cat: Omit<Category, 'id'>) => Category;
   updateCategory: (id: string, updates: Partial<Category>) => void;
   deleteCategory: (id: string) => void;
+  addSubCategory: (categoryId: string, name: string) => void;
+  deleteSubCategory: (categoryId: string, subId: string) => void;
   getCategoryById: (id: string) => Category | undefined;
 
   // Platforms
@@ -174,6 +176,8 @@ export const SchedulerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     addCategory: config.addCategory,
     updateCategory: config.updateCategory,
     deleteCategory: config.deleteCategory,
+    addSubCategory: config.addSubCategory,
+    deleteSubCategory: config.deleteSubCategory,
     getCategoryById: config.getCategoryById,
     platforms: config.platforms,
     addPlatform: config.addPlatform,

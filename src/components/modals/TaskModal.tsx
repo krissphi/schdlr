@@ -20,6 +20,7 @@ export const TaskModal: React.FC = () => {
 
   const [title, setTitle] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [subCategoryId, setSubCategoryId] = useState('');
   const [date, setDate] = useState(selectedDate);
   const [startTime, setStartTime] = useState('09:00');
   const [durationMinutes, setDurationMinutes] = useState(60);
@@ -38,10 +39,13 @@ export const TaskModal: React.FC = () => {
 
   const computedEndTime = calculateEndTime(startTime, durationMinutes);
 
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+
   useEffect(() => {
     if (editingTask) {
       setTitle(editingTask.title);
       setCategoryId(editingTask.categoryId || categories[0]?.id || '');
+      setSubCategoryId(editingTask.subCategoryId || '');
       setDate(editingTask.date || selectedDate);
       setStartTime(editingTask.startTime || '09:00');
       setDurationMinutes(editingTask.durationMinutes || 60);
@@ -50,6 +54,7 @@ export const TaskModal: React.FC = () => {
     } else {
       setTitle('');
       setCategoryId(categories[0]?.id || '');
+      setSubCategoryId('');
       setDate(selectedDate);
       setStartTime('09:00');
       setDurationMinutes(60);
@@ -68,6 +73,7 @@ export const TaskModal: React.FC = () => {
       updateTask(editingTask.id, {
         title: title.trim(),
         categoryId: categoryId || categories[0]?.id,
+        subCategoryId: subCategoryId || undefined,
         date,
         startTime,
         endTime: computedEndTime,
@@ -79,6 +85,7 @@ export const TaskModal: React.FC = () => {
       addTask({
         title: title.trim(),
         categoryId: categoryId || categories[0]?.id,
+        subCategoryId: subCategoryId || undefined,
         date,
         startTime,
         endTime: computedEndTime,
@@ -124,22 +131,46 @@ export const TaskModal: React.FC = () => {
             />
           </div>
 
-          {/* Category */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Category
-            </label>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
-            >
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+          {/* Category & Sub-category */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Category
+              </label>
+              <select
+                value={categoryId}
+                onChange={(e) => {
+                  setCategoryId(e.target.value);
+                  setSubCategoryId('');
+                }}
+                className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900"
+              >
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Sub-category (Optional)
+              </label>
+              <select
+                value={subCategoryId}
+                onChange={(e) => setSubCategoryId(e.target.value)}
+                disabled={!selectedCategory?.subCategories || selectedCategory.subCategories.length === 0}
+                className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-1 focus:ring-slate-900 disabled:opacity-50"
+              >
+                <option value="">None</option>
+                {selectedCategory?.subCategories?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Date, Start Time & Reactive End Time */}
