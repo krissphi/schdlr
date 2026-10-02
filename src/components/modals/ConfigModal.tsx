@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { X, Plus, Trash2, Sliders, Tag, Globe, CornerDownRight } from 'lucide-react';
-import { useScheduler } from '../../context/SchedulerContext';
-import { CategoryBadge, PlatformBadge } from '../common/Badges';
-import { Category } from '../../types/schdlr';
+import { Globe, Plus, Sliders, Tag, Trash2, X } from "lucide-react";
+import React, { useState } from "react";
+import { useScheduler } from "../../context/SchedulerContext";
+import { Category } from "../../types/schdlr";
+import { CategoryBadge, PlatformBadge } from "../common/Badges";
 
-const CategoryCardItem: React.FC<{ category: Category; categoriesCount: number }> = ({
-  category,
-  categoriesCount,
-}) => {
+const CategoryCardItem: React.FC<{
+  category: Category;
+  categoriesCount: number;
+}> = ({ category, categoriesCount }) => {
   const { deleteCategory, addSubCategory, deleteSubCategory } = useScheduler();
-  const [subName, setSubName] = useState('');
+  const [subName, setSubName] = useState("");
 
   const handleAddSub = (e: React.FormEvent) => {
     e.preventDefault();
     if (!subName.trim()) return;
     addSubCategory(category.id, subName.trim());
-    setSubName('');
+    setSubName("");
   };
 
   return (
@@ -47,7 +47,7 @@ const CategoryCardItem: React.FC<{ category: Category; categoriesCount: number }
           <div className="flex flex-wrap gap-1.5">
             {category.subCategories.map((sub, index) => {
               // Generate subtle shade variations of parent category color (adjust opacity/lightness dynamically)
-              const opacities = ['18', '28', '38', '48', '58'];
+              const opacities = ["18", "28", "38", "48", "58"];
               const bgOpacity = opacities[index % opacities.length];
               return (
                 <span
@@ -59,7 +59,10 @@ const CategoryCardItem: React.FC<{ category: Category; categoriesCount: number }
                     border: `1px solid ${category.color}35`,
                   }}
                 >
-                  <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: category.color }} />
+                  <span
+                    className="w-1 h-1 rounded-full shrink-0"
+                    style={{ backgroundColor: category.color }}
+                  />
                   {sub.name}
                   <button
                     onClick={() => deleteSubCategory(category.id, sub.id)}
@@ -103,36 +106,37 @@ export const ConfigModal: React.FC = () => {
     closeConfigModal,
     categories,
     addCategory,
-    deleteCategory,
     platforms,
     addPlatform,
     deletePlatform,
   } = useScheduler();
 
-  const [activeTab, setActiveTab] = useState<'categories' | 'platforms'>('categories');
+  const [activeTab, setActiveTab] = useState<"categories" | "platforms">(
+    "categories",
+  );
 
   // New Category Form
-  const [newCatName, setNewCatName] = useState('');
-  const [newCatColor, setNewCatColor] = useState('#0284c7');
+  const [newCatName, setNewCatName] = useState("");
+  const [newCatColor, setNewCatColor] = useState("#0284c7");
 
   // New Platform Form
-  const [newPlatName, setNewPlatName] = useState('');
-  const [newPlatColor, setNewPlatColor] = useState('#4f46e5');
+  const [newPlatName, setNewPlatName] = useState("");
+  const [newPlatColor, setNewPlatColor] = useState("#4f46e5");
 
   if (!isConfigModalOpen) return null;
 
   // Preset curated pastel/vibrant colors
   const colorPresets = [
-    '#e11d48', // Rose
-    '#2563eb', // Blue
-    '#059669', // Emerald
-    '#7c3aed', // Violet
-    '#0891b2', // Cyan
-    '#d97706', // Amber
-    '#ea580c', // Orange
-    '#4b5563', // Gray
-    '#db2777', // Pink
-    '#0d9488', // Teal
+    "#e11d48", // Rose
+    "#2563eb", // Blue
+    "#059669", // Emerald
+    "#7c3aed", // Violet
+    "#0891b2", // Cyan
+    "#d97706", // Amber
+    "#ea580c", // Orange
+    "#4b5563", // Gray
+    "#db2777", // Pink
+    "#0d9488", // Teal
   ];
 
   const handleCreateCategory = (e: React.FormEvent) => {
@@ -147,7 +151,7 @@ export const ConfigModal: React.FC = () => {
       borderColor: `${newCatColor}30`,
     });
 
-    setNewCatName('');
+    setNewCatName("");
   };
 
   const handleCreatePlatform = (e: React.FormEvent) => {
@@ -161,7 +165,7 @@ export const ConfigModal: React.FC = () => {
       textColor: newPlatColor,
     });
 
-    setNewPlatName('');
+    setNewPlatName("");
   };
 
   return (
@@ -186,11 +190,11 @@ export const ConfigModal: React.FC = () => {
         {/* Tab Switcher */}
         <div className="px-6 pt-3 flex border-b border-slate-100 gap-4">
           <button
-            onClick={() => setActiveTab('categories')}
+            onClick={() => setActiveTab("categories")}
             className={`pb-2.5 text-xs font-semibold flex items-center gap-1.5 border-b-2 transition-all ${
-              activeTab === 'categories'
-                ? 'border-slate-900 text-slate-900'
-                : 'border-transparent text-slate-400 hover:text-slate-600'
+              activeTab === "categories"
+                ? "border-slate-900 text-slate-900"
+                : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
             <Tag className="w-3.5 h-3.5" />
@@ -198,11 +202,11 @@ export const ConfigModal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('platforms')}
+            onClick={() => setActiveTab("platforms")}
             className={`pb-2.5 text-xs font-semibold flex items-center gap-1.5 border-b-2 transition-all ${
-              activeTab === 'platforms'
-                ? 'border-slate-900 text-slate-900'
-                : 'border-transparent text-slate-400 hover:text-slate-600'
+              activeTab === "platforms"
+                ? "border-slate-900 text-slate-900"
+                : "border-transparent text-slate-400 hover:text-slate-600"
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -212,11 +216,16 @@ export const ConfigModal: React.FC = () => {
 
         {/* Content Area */}
         <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6">
-          {activeTab === 'categories' ? (
+          {activeTab === "categories" ? (
             <div className="space-y-5">
               {/* Add Category Form */}
-              <form onSubmit={handleCreateCategory} className="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-                <div className="text-xs font-semibold text-slate-700">Add New Category</div>
+              <form
+                onSubmit={handleCreateCategory}
+                className="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80"
+              >
+                <div className="text-xs font-semibold text-slate-700">
+                  Add New Category
+                </div>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -237,14 +246,18 @@ export const ConfigModal: React.FC = () => {
 
                 {/* Color presets */}
                 <div className="flex items-center gap-1.5 pt-1">
-                  <span className="text-[11px] text-slate-400 mr-1">Color:</span>
+                  <span className="text-[11px] text-slate-400 mr-1">
+                    Color:
+                  </span>
                   {colorPresets.map((c) => (
                     <button
                       type="button"
                       key={c}
                       onClick={() => setNewCatColor(c)}
                       className={`w-5 h-5 rounded-full transition-transform ${
-                        newCatColor === c ? 'scale-125 ring-2 ring-slate-900 ring-offset-1' : 'hover:scale-110'
+                        newCatColor === c
+                          ? "scale-125 ring-2 ring-slate-900 ring-offset-1"
+                          : "hover:scale-110"
                       }`}
                       style={{ backgroundColor: c }}
                     />
@@ -259,7 +272,11 @@ export const ConfigModal: React.FC = () => {
                 </div>
                 <div className="space-y-3">
                   {categories.map((c) => (
-                    <CategoryCardItem key={c.id} category={c} categoriesCount={categories.length} />
+                    <CategoryCardItem
+                      key={c.id}
+                      category={c}
+                      categoriesCount={categories.length}
+                    />
                   ))}
                 </div>
               </div>
@@ -267,8 +284,13 @@ export const ConfigModal: React.FC = () => {
           ) : (
             <div className="space-y-5">
               {/* Add Platform Form */}
-              <form onSubmit={handleCreatePlatform} className="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-                <div className="text-xs font-semibold text-slate-700">Add New Platform</div>
+              <form
+                onSubmit={handleCreatePlatform}
+                className="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80"
+              >
+                <div className="text-xs font-semibold text-slate-700">
+                  Add New Platform
+                </div>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -288,14 +310,18 @@ export const ConfigModal: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-1.5 pt-1">
-                  <span className="text-[11px] text-slate-400 mr-1">Color:</span>
+                  <span className="text-[11px] text-slate-400 mr-1">
+                    Color:
+                  </span>
                   {colorPresets.map((c) => (
                     <button
                       type="button"
                       key={c}
                       onClick={() => setNewPlatColor(c)}
                       className={`w-5 h-5 rounded-full transition-transform ${
-                        newPlatColor === c ? 'scale-125 ring-2 ring-slate-900 ring-offset-1' : 'hover:scale-110'
+                        newPlatColor === c
+                          ? "scale-125 ring-2 ring-slate-900 ring-offset-1"
+                          : "hover:scale-110"
                       }`}
                       style={{ backgroundColor: c }}
                     />
@@ -316,13 +342,17 @@ export const ConfigModal: React.FC = () => {
                     >
                       <div className="flex items-center gap-2.5">
                         <PlatformBadge platformId={p.id} />
-                        <span className="text-xs font-semibold text-slate-800">{p.name}</span>
+                        <span className="text-xs font-semibold text-slate-800">
+                          {p.name}
+                        </span>
                       </div>
 
                       {platforms.length > 1 && (
                         <button
                           onClick={() => {
-                            if (window.confirm(`Delete platform "${p.name}"?`)) {
+                            if (
+                              window.confirm(`Delete platform "${p.name}"?`)
+                            ) {
                               deletePlatform(p.id);
                             }
                           }}
